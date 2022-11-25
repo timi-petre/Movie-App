@@ -1,3 +1,4 @@
+import { SearchIcon } from '@chakra-ui/icons'
 import {
     Badge,
     Button,
@@ -14,28 +15,12 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react'
+import Layout from 'components/Layout'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { buildImageUrl } from 'utils/api'
-// import
-//   {
-//   Input,
-//   IconButton,
-//   Container,
-//   UnorderedList,
-//   ListItem,
-//   Progress,
-//   Text,
-//   InputGroup,
-//   InputRightElement,
-//   VStack,
-//   Button,
-//   Badge,
-// } from '@chakra-ui/react';
-import { SearchIcon } from '@chakra-ui/icons'
-import Layout from 'components/Layout'
 
 function SearchBar() {
     const router = useRouter()

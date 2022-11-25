@@ -69,7 +69,6 @@ const MovieContent = () => {
                     </Box>
                 </HStack>
                 <Box>{data.tagline}</Box>
-
                 <Stack direction="row">
                     {data.genres?.map((genre) => (
                         <Badge
@@ -82,6 +81,12 @@ const MovieContent = () => {
                     ))}
                 </Stack>
                 <Box>{data.overview}</Box>
+
+                <Box>
+                    <Tag colorScheme="purple" variant="solid">
+                        {data.status}
+                    </Tag>
+                </Box>
             </Stack>
         </Stack>
     )
