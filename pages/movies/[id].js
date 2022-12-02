@@ -51,7 +51,7 @@ const MovieContent = () => {
                 <Image
                     src={buildImageUrl(data.poster_path, 'w300')}
                     alt="Movie poster"
-                    title="Movie poster"
+                    title={data.title}
                     layout="responsive"
                     width="300"
                     height="450"
@@ -81,12 +81,14 @@ const MovieContent = () => {
                     ))}
                 </Stack>
                 <Box>{data.overview}</Box>
-
-                <Box>
-                    <Tag colorScheme="purple" variant="solid">
-                        {data.status}
-                    </Tag>
-                </Box>
+                <HStack justify="space-between">
+                    <Box>
+                        <Tag colorScheme="purple" variant="solid">
+                            {data.status}
+                        </Tag>
+                        <Tag title="Popularity">{data.popularity}</Tag>
+                    </Box>
+                </HStack>
             </Stack>
         </Stack>
     )
