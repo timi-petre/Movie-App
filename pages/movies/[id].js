@@ -21,6 +21,9 @@ import { buildImageUrl } from 'utils/api'
 const MovieContent = () => {
     const { id } = useRouter().query
     const { data, error } = useSWR(id && `/api/movies/${id}`)
+    let { credits } = useSWR(
+        id && `/api/movies/${id}/credits?api_key=${process.env.TMDB_API_KEY}`,
+    )
 
     if (error) {
         return (
@@ -29,6 +32,7 @@ const MovieContent = () => {
             </Text>
         )
     }
+
     if (!data) {
         return (
             <Center h="full">
@@ -89,6 +93,17 @@ const MovieContent = () => {
                         <Tag title="Popularity">{data.popularity}</Tag>
                     </Box>
                 </HStack>
+                <Box>
+                    {credits?.cast.map((cast) => (
+                        <Tag
+                            key={cast.id}
+                            colorScheme="purple"
+                            variant="outline"
+                        >
+                            {cast.name}
+                        </Tag>
+                    ))}
+                </Box>
             </Stack>
         </Stack>
     )

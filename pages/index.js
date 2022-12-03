@@ -4,6 +4,7 @@ import {
     CardBody,
     Container,
     Heading,
+    Progress,
     SimpleGrid,
     Tag,
 } from '@chakra-ui/react'
@@ -13,6 +14,9 @@ import Link from 'next/link'
 import { buildImageUrl } from 'utils/api'
 
 function PopularMovie({ movies }) {
+    if (!movies) {
+        return <Progress size="xs" isIndeterminate />
+    }
     return (
         <SimpleGrid
             spacing={3}
@@ -46,9 +50,10 @@ function PopularMovie({ movies }) {
                             />
                         </Link>
                         <Box mt="5">
-                            <Tag colorScheme="purple" variant="solid">
+                            <Tag colorScheme="purple" variant="solid" mr="2">
                                 {movie.title}
                             </Tag>
+                            <Tag>{movie.vote_average}</Tag>
                         </Box>
                     </CardBody>
                 </Card>
@@ -64,7 +69,6 @@ export default function Home({ movies }) {
                 <Heading as="h4" size="md">
                     What&apos;s Popular
                 </Heading>
-
                 <PopularMovie movies={movies.results} />
             </Container>
         </Layout>
@@ -78,5 +82,6 @@ export async function getStaticProps() {
 
     return {
         props: { movies: movies },
+        revalidate: 30,
     }
 }
