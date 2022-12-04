@@ -12,6 +12,7 @@ import {
     InputRightElement,
     Progress,
     SimpleGrid,
+    Stack,
     Text,
     VStack,
 } from '@chakra-ui/react'
@@ -58,8 +59,10 @@ function SearchBar() {
     )
 }
 function SearchResults() {
-    const { terms } = useRouter().query
-    const { data, error } = useSWR(terms && `/api/search?terms=${terms}`)
+    const { terms, page } = useRouter().query
+    const { data, error } = useSWR(
+        terms && `/api/search?terms=${terms} &page=${page}`,
+    )
 
     if (!terms) {
         return <Text>Type some terms and submit for a quick search</Text>
@@ -79,46 +82,82 @@ function SearchResults() {
     }
 
     return (
-        <SimpleGrid
-            spacing={3}
-            templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
-        >
-            {data.results.map(({ id, title, release_date, poster_path }) => (
-                <Card maxW="sm" key={id}>
-                    <CardBody>
-                        <Link href={`/movies/${id}`} passHref legacyBehavior>
-                            <Image
-                                src={buildImageUrl(
-                                    poster_path === null
-                                        ? '/iYBfBk1i9zjN9Vybbj8UgTYzkyv.jpg'
-                                        : poster_path,
-                                    'w500',
-                                )}
-                                alt="Movie poster"
-                                layout="responsive"
-                                width="100"
-                                height="395px"
-                                objectFit="contain"
-                                borderRadius="lg"
-                                unoptimized="true"
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </Link>
-                        <Link href={`/movies/${id}`} passHref legacyBehavior>
-                            <Button
-                                as="a"
-                                variant="link"
-                                rightIcon={<Badge>{release_date}</Badge>}
-                            >
-                                <Text as="span" noOfLines={1} width="180px">
-                                    {title}
-                                </Text>
+        <>
+            <SimpleGrid
+                spacing={3}
+                templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+            >
+                {data.results.map(
+                    ({ id, title, release_date, poster_path }) => (
+                        <Card maxW="sm" key={id}>
+                            <CardBody>
+                                <Link
+                                    href={`/movies/${id}`}
+                                    passHref
+                                    legacyBehavior
+                                >
+                                    <Image
+                                        src={buildImageUrl(
+                                            poster_path === null
+                                                ? '/iYBfBk1i9zjN9Vybbj8UgTYzkyv.jpg'
+                                                : poster_path,
+                                            'w500',
+                                        )}
+                                        alt="Movie poster"
+                                        layout="responsive"
+                                        width="100"
+                                        height="395px"
+                                        objectFit="contain"
+                                        borderRadius="lg"
+                                        unoptimized="true"
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                </Link>
+                                <Link
+                                    href={`/movies/${id}`}
+                                    passHref
+                                    legacyBehavior
+                                >
+                                    <Button
+                                        as="a"
+                                        variant="link"
+                                        rightIcon={
+                                            <Badge>{release_date}</Badge>
+                                        }
+                                    >
+                                        <Text
+                                            as="span"
+                                            noOfLines={1}
+                                            width="180px"
+                                        >
+                                            {title}
+                                        </Text>
+                                    </Button>
+                                </Link>
+                            </CardBody>
+                        </Card>
+                    ),
+                )}
+            </SimpleGrid>
+            <Container textAlign="center">
+                {data.page ? (
+                    <div>
+                        <Text mt="5">
+                            Page {data.page} of {data.total_pages}
+                        </Text>
+                        <Text>{data.total_results} results</Text>
+                        <Stack direction="row" spacing={4}>
+                            <Button colorScheme="teal" variant="solid">
+                                Email
                             </Button>
-                        </Link>
-                    </CardBody>
-                </Card>
-            ))}
-        </SimpleGrid>
+                            <Button colorScheme="teal" variant="outline">
+                                Call us
+                            </Button>
+                        </Stack>
+                    </div>
+                ) : null}
+            </Container>
+        </>
     )
 }
 

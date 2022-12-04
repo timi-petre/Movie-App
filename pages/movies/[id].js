@@ -85,14 +85,14 @@ const MovieContent = () => {
                     ))}
                 </Stack>
                 <Box>{data.overview}</Box>
-                <HStack justify="space-between">
-                    <Box>
-                        <Tag colorScheme="purple" variant="solid">
-                            {data.status}
-                        </Tag>
-                        <Tag title="Popularity">{data.popularity}</Tag>
-                    </Box>
-                </HStack>
+
+                <Box>
+                    <Tag colorScheme="purple" variant="solid">
+                        {data.status}
+                    </Tag>
+                    <Tag title="Popularity">{data.popularity}</Tag>
+                </Box>
+
                 <Box>
                     {credits?.cast.map((cast) => (
                         <Tag
