@@ -12,7 +12,6 @@ import {
     InputRightElement,
     Progress,
     SimpleGrid,
-    Stack,
     Text,
     VStack,
 } from '@chakra-ui/react'
@@ -25,8 +24,13 @@ import { buildImageUrl } from 'utils/api'
 
 function SearchBar() {
     const router = useRouter()
-    const { terms } = router.query
+    const { terms, pages } = router.query
     const [text, setText] = useState('')
+    const [page, setPage] = useState([])
+
+    useEffect(() => {
+        setPage(pages || 1)
+    }, [terms, pages])
 
     // Update text input when route changes (ex when user goes back/forward)
     useEffect(() => {
@@ -37,7 +41,9 @@ function SearchBar() {
     const handleSearch = (event) => {
         event.preventDefault()
         if (text !== terms) {
-            router.push(`/search/?terms=${text}`, undefined, { shallow: true })
+            router.push(`/search/?terms=${text}&pages=${page}`, undefined, {
+                shallow: true,
+            })
         }
     }
 
@@ -59,9 +65,9 @@ function SearchBar() {
     )
 }
 function SearchResults() {
-    const { terms, page } = useRouter().query
+    const { terms, pages } = useRouter().query
     const { data, error } = useSWR(
-        terms && `/api/search?terms=${terms} &page=${page}`,
+        terms && pages && `/api/search?terms=${terms}&page=${pages}`,
     )
 
     if (!terms) {
@@ -146,14 +152,49 @@ function SearchResults() {
                             Page {data.page} of {data.total_pages}
                         </Text>
                         <Text>{data.total_results} results</Text>
-                        <Stack direction="row" spacing={4}>
-                            <Button colorScheme="teal" variant="solid">
-                                Email
+                        <Link
+                            href={`/search?terms=${terms}&pages=${pages}`}
+                            passHref
+                            legacyBehavior
+                        >
+                            <Button
+                                as="a"
+                                // variant="link"
+                                colorScheme="teal"
+                                variant="solid"
+                                mr="5"
+                                onClick={() => {
+                                    if (data.page !== data.total_pages) {
+                                        data.page - 1
+                                    }
+                                }}
+                            >
+                                <Text as="span" noOfLines={1} width="180px">
+                                    Previous Page
+                                </Text>
                             </Button>
-                            <Button colorScheme="teal" variant="outline">
-                                Call us
+                        </Link>
+                        <Link
+                            href={`/search?terms=${terms}&pages=${pages}`}
+                            passHref
+                            legacyBehavior
+                        >
+                            <Button
+                                as="a"
+                                // variant="link"
+                                colorScheme="teal"
+                                variant="outline"
+                                onClick={() => {
+                                    if (data.page !== data.total_pages) {
+                                        data.page + 1
+                                    }
+                                }}
+                            >
+                                <Text as="span" noOfLines={1} width="180px">
+                                    Next Page
+                                </Text>
                             </Button>
-                        </Stack>
+                        </Link>
                     </div>
                 ) : null}
             </Container>
@@ -162,6 +203,8 @@ function SearchResults() {
 }
 
 export default function Search() {
+    // const { movies, handlePageChange } = useContext(DataContext)
+    // console.log(movies)
     return (
         <Layout title="Search">
             <Container>
