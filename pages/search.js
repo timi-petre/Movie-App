@@ -26,11 +26,9 @@ function SearchBar() {
     const router = useRouter()
     const { terms, pages } = router.query
     const [text, setText] = useState('')
-    const [page, setPage] = useState([])
+    const [page, setPage] = useState(1)
 
-    useEffect(() => {
-        setPage(pages || 1)
-    }, [terms, pages])
+    // Write a button to go to next page
 
     // Update text input when route changes (ex when user goes back/forward)
     useEffect(() => {
@@ -65,10 +63,11 @@ function SearchBar() {
     )
 }
 function SearchResults() {
-    const { terms, pages } = useRouter().query
+    let { terms, pages } = useRouter().query
     const { data, error } = useSWR(
         terms && pages && `/api/search?terms=${terms}&page=${pages}`,
     )
+    const [page, setPage] = useState(1)
 
     if (!terms) {
         return <Text>Type some terms and submit for a quick search</Text>
@@ -151,6 +150,7 @@ function SearchResults() {
                         <Text mt="5">
                             Page {data.page} of {data.total_pages}
                         </Text>
+                        <Text>{data.id}</Text>
                         <Text>{data.total_results} results</Text>
                         <Link
                             href={`/search?terms=${terms}&pages=${pages}`}
@@ -163,17 +163,13 @@ function SearchResults() {
                                 colorScheme="teal"
                                 variant="solid"
                                 mr="5"
-                                onClick={() => {
-                                    if (data.page !== data.total_pages) {
-                                        data.page - 1
-                                    }
-                                }}
                             >
                                 <Text as="span" noOfLines={1} width="180px">
                                     Previous Page
                                 </Text>
                             </Button>
                         </Link>
+
                         <Link
                             href={`/search?terms=${terms}&pages=${pages}`}
                             passHref
@@ -184,11 +180,6 @@ function SearchResults() {
                                 // variant="link"
                                 colorScheme="teal"
                                 variant="outline"
-                                onClick={() => {
-                                    if (data.page !== data.total_pages) {
-                                        data.page + 1
-                                    }
-                                }}
                             >
                                 <Text as="span" noOfLines={1} width="180px">
                                     Next Page
@@ -203,8 +194,6 @@ function SearchResults() {
 }
 
 export default function Search() {
-    // const { movies, handlePageChange } = useContext(DataContext)
-    // console.log(movies)
     return (
         <Layout title="Search">
             <Container>

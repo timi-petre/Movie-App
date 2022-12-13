@@ -6,5 +6,3 @@ export const swrOptions = {
 
 export const buildImageUrl = (path, size = 'original') =>
     `https://image.tmdb.org/t/p/${size}${path}`
-
-export const serverUrl = `https://api.themoviedb.org/3/movie`

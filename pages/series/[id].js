@@ -1,39 +1,58 @@
 import {
     Badge,
     Box,
+    Center,
+    CircularProgress,
     Container,
     Heading,
     HStack,
     Stack,
     Tag,
-    VStack,
+    Text,
 } from '@chakra-ui/react'
+import HistoryButton from 'components/HistoryButton'
 import Layout from 'components/Layout'
+import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { buildImageUrl } from 'utils/api'
 
-function Watch() {
-    const router = useRouter()
-    const { id } = router.query
-    const { data, error } = useSWR(id && `/api/history/{id}`)
+const SerieContent = () => {
+    const { id } = useRouter().query
+    const { data, error } = useSWR(id && `/api/series/${id}`)
 
     if (error) {
         return (
-            <div>
-                Error fetching movie with ID {id}: {JSON.stringify(error)}
-            </div>
+            <Text color="red">
+                Error fetching tv series with ID {id}: {JSON.stringify(error)}
+            </Text>
         )
     }
 
+    if (!data) {
+        return (
+            <Center h="full">
+                <CircularProgress isIndeterminate />
+            </Center>
+        )
+    }
+    if (data.success === false) {
+        return <Text color="red">{data.status_message}</Text>
+    }
     return (
         <Stack direction={['column', 'row']} spacing={4}>
+            <Head>
+                <title>{data.title}</title>
+            </Head>
             <Box minW="300px" pos="relative">
+                <HStack pos="absolute" zIndex={1} top={2} right={2}>
+                    <HistoryButton />
+                </HStack>
                 <Image
-                    src={buildImageUrl(data?.poster_path, 'w300')}
+                    src={buildImageUrl(data.poster_path, 'w300')}
                     alt="Movie poster"
-                    title={data?.title}
+                    title={data.title}
                     layout="responsive"
                     width="300"
                     height="450"
@@ -43,16 +62,16 @@ function Watch() {
             </Box>
             <Stack>
                 <HStack justify="space-between">
-                    <Heading as="h2">{data?.title}</Heading>
+                    <Heading as="h2">{data.title}</Heading>
                     <Box>
                         <Tag colorScheme="purple" variant="solid">
-                            {data?.release_date}
+                            {data.release_date}
                         </Tag>
                     </Box>
                 </HStack>
-                <Box>{data?.tagline}</Box>
+                <Box>{data.tagline}</Box>
                 <Stack direction="row">
-                    {data?.genres?.map((genre) => (
+                    {data.genres?.map((genre) => (
                         <Badge
                             key={genre.id}
                             colorScheme="purple"
@@ -62,26 +81,24 @@ function Watch() {
                         </Badge>
                     ))}
                 </Stack>
-                <Box>{data?.overview}</Box>
+                <Box>{data.overview}</Box>
 
                 <Box>
                     <Tag colorScheme="purple" variant="solid">
-                        {data?.status}
+                        {data.status}
                     </Tag>
-                    <Tag title="Popularity">{data?.popularity}</Tag>
+                    <Tag title="Popularity">{data.popularity}</Tag>
                 </Box>
             </Stack>
         </Stack>
     )
 }
 
-export default function Watchlist() {
+export default function Movie() {
     return (
-        <Layout title="Watchlist">
-            <Container>
-                <VStack spacing={4} align="stretch">
-                    <Watch />
-                </VStack>
+        <Layout>
+            <Container h="full">
+                <SerieContent />
             </Container>
         </Layout>
     )
