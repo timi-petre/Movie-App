@@ -24,11 +24,8 @@ import { buildImageUrl } from 'utils/api'
 
 function SearchBar() {
     const router = useRouter()
-    const { terms, pages } = router.query
+    const { terms } = router.query
     const [text, setText] = useState('')
-    const [page, setPage] = useState(1)
-
-    // Write a button to go to next page
 
     // Update text input when route changes (ex when user goes back/forward)
     useEffect(() => {
@@ -39,7 +36,7 @@ function SearchBar() {
     const handleSearch = (event) => {
         event.preventDefault()
         if (text !== terms) {
-            router.push(`/search/?terms=${text}&pages=${page}`, undefined, {
+            router.push(`/search/?terms=${text}`, undefined, {
                 shallow: true,
             })
         }
@@ -63,11 +60,8 @@ function SearchBar() {
     )
 }
 function SearchResults() {
-    let { terms, pages } = useRouter().query
-    const { data, error } = useSWR(
-        terms && pages && `/api/search?terms=${terms}&page=${pages}`,
-    )
-    const [page, setPage] = useState(1)
+    let { terms } = useRouter().query
+    const { data, error } = useSWR(terms && `/api/search?terms=${terms}`)
 
     if (!terms) {
         return <Text>Type some terms and submit for a quick search</Text>
@@ -82,12 +76,13 @@ function SearchResults() {
     if (!data) {
         return <Progress size="xs" isIndeterminate />
     }
-    if (!data.results.length) {
+    if (!data.results?.length) {
         return <Text>No results</Text>
     }
 
     return (
         <>
+            <Text>Related Movies &apos;{terms}&apos;</Text>
             <SimpleGrid
                 spacing={3}
                 templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
@@ -144,51 +139,6 @@ function SearchResults() {
                     ),
                 )}
             </SimpleGrid>
-            <Container textAlign="center">
-                {data.page ? (
-                    <div>
-                        <Text mt="5">
-                            Page {data.page} of {data.total_pages}
-                        </Text>
-                        <Text>{data.id}</Text>
-                        <Text>{data.total_results} results</Text>
-                        <Link
-                            href={`/search?terms=${terms}&pages=${pages}`}
-                            passHref
-                            legacyBehavior
-                        >
-                            <Button
-                                as="a"
-                                // variant="link"
-                                colorScheme="teal"
-                                variant="solid"
-                                mr="5"
-                            >
-                                <Text as="span" noOfLines={1} width="180px">
-                                    Previous Page
-                                </Text>
-                            </Button>
-                        </Link>
-
-                        <Link
-                            href={`/search?terms=${terms}&pages=${pages}`}
-                            passHref
-                            legacyBehavior
-                        >
-                            <Button
-                                as="a"
-                                // variant="link"
-                                colorScheme="teal"
-                                variant="outline"
-                            >
-                                <Text as="span" noOfLines={1} width="180px">
-                                    Next Page
-                                </Text>
-                            </Button>
-                        </Link>
-                    </div>
-                ) : null}
-            </Container>
         </>
     )
 }

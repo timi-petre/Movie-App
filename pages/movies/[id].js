@@ -65,7 +65,7 @@ const MovieContent = () => {
                     <Heading as="h2">{data.title}</Heading>
                     <Box>
                         <Tag colorScheme="purple" variant="solid">
-                            {data.release_date}
+                            {!data.release_date ? 'Unknown' : data.release_date}
                         </Tag>
                     </Box>
                 </HStack>
@@ -83,12 +83,23 @@ const MovieContent = () => {
                 </Stack>
                 <Box>{data.overview}</Box>
 
-                <Box>
-                    <Tag colorScheme="purple" variant="solid">
-                        {data.status}
-                    </Tag>
-                    <Tag title="Popularity">{data.popularity}</Tag>
-                </Box>
+                <Box></Box>
+                <Stack>
+                    <HStack justify="space-between">
+                        <Box>
+                            {' '}
+                            <Tag colorScheme="purple" variant="solid" mr="2">
+                                {data.status}
+                            </Tag>
+                            <Tag title="Votes">{data.vote_count} 👍</Tag>
+                        </Box>
+                        <Box>
+                            <Tag colorScheme="purple" variant="solid">
+                                {data.original_language}
+                            </Tag>
+                        </Box>
+                    </HStack>
+                </Stack>
             </Stack>
         </Stack>
     )

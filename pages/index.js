@@ -11,19 +11,25 @@ import {
 import Layout from 'components/Layout'
 import Image from 'next/image'
 import Link from 'next/link'
+import useSWR from 'swr'
 import { buildImageUrl } from 'utils/api'
 
-function PopularMovie({ movies }) {
+function PopularMovie() {
+    const popular = useSWR('/api/movies/popular')
+    const movies = popular.data?.results
     if (!movies) {
         return <Progress size="xs" isIndeterminate />
     }
+
     return (
         <SimpleGrid
-            spacing={3}
-            templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+            spacing={8}
+            columns={5}
+            // templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
             mt="5"
         >
-            {movies?.map((movie) => (
+            {' '}
+            {movies.map((movie) => (
                 <Card maxW="sm" key={movie.id}>
                     <CardBody alignContent="space-between" textAlign="center">
                         {' '}
@@ -37,7 +43,7 @@ function PopularMovie({ movies }) {
                                     movie.poster_path === null
                                         ? '/iYBfBk1i9zjN9Vybbj8UgTYzkyv.jpg'
                                         : movie.poster_path,
-                                    'w300',
+                                    'w500',
                                 )}
                                 alt="Movie poster"
                                 layout="responsive"
@@ -62,16 +68,15 @@ function PopularMovie({ movies }) {
     )
 }
 
-function PopularSerie({ series }) {
+function PopularSerie() {
+    const popular = useSWR('/api/series/popular')
+    const series = popular.data?.results
     if (!series) {
         return <Progress size="xs" isIndeterminate />
     }
+
     return (
-        <SimpleGrid
-            spacing={3}
-            templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
-            mt="5"
-        >
+        <SimpleGrid spacing={8} columns={5} mt="5">
             {series?.map((serie) => (
                 <Card maxW="sm" key={serie.id}>
                     <CardBody alignContent="space-between" textAlign="center">
@@ -111,36 +116,22 @@ function PopularSerie({ series }) {
     )
 }
 
-export default function Home({ movies, series }) {
+export default function Home({ series }) {
     return (
         <Layout title="Moviebase">
             <Container>
                 <Heading as="h4" size="md">
                     Movies
                 </Heading>
-                <PopularMovie movies={movies.results} />
+                <PopularMovie />
             </Container>
 
-            <Container mt="5">
+            <Container mt="5" mb="10">
                 <Heading as="h4" size="md">
                     TV Series
                 </Heading>
-                <PopularSerie series={series.results} />
+                <PopularSerie />
             </Container>
         </Layout>
     )
-}
-export async function getStaticProps() {
-    let movies = await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`,
-    )
-    let series = await fetch(`
-        https://api.themoviedb.org/3/tv/popular?api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`)
-    movies = await movies.json()
-    series = await series.json()
-
-    return {
-        props: { movies: movies, series: series },
-        revalidate: 30,
-    }
 }

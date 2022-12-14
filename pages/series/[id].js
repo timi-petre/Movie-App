@@ -43,7 +43,7 @@ const SerieContent = () => {
     return (
         <Stack direction={['column', 'row']} spacing={4}>
             <Head>
-                <title>{data.title}</title>
+                <title>{data.name}</title>
             </Head>
             <Box minW="300px" pos="relative">
                 <HStack pos="absolute" zIndex={1} top={2} right={2}>
@@ -52,7 +52,7 @@ const SerieContent = () => {
                 <Image
                     src={buildImageUrl(data.poster_path, 'w300')}
                     alt="Movie poster"
-                    title={data.title}
+                    title={data.name}
                     layout="responsive"
                     width="300"
                     height="450"
@@ -62,10 +62,14 @@ const SerieContent = () => {
             </Box>
             <Stack>
                 <HStack justify="space-between">
-                    <Heading as="h2">{data.title}</Heading>
+                    <Heading as="h2">
+                        {!data.name ? 'Title not found' : data.name}
+                    </Heading>
                     <Box>
                         <Tag colorScheme="purple" variant="solid">
-                            {data.release_date}
+                            {!data.first_air_date
+                                ? 'Unknown'
+                                : data.first_air_date}
                         </Tag>
                     </Box>
                 </HStack>
@@ -83,18 +87,29 @@ const SerieContent = () => {
                 </Stack>
                 <Box>{data.overview}</Box>
 
-                <Box>
-                    <Tag colorScheme="purple" variant="solid">
-                        {data.status}
-                    </Tag>
-                    <Tag title="Popularity">{data.popularity}</Tag>
-                </Box>
+                <Box></Box>
+                <Stack>
+                    <HStack justify="space-between">
+                        <Box>
+                            {' '}
+                            <Tag colorScheme="purple" variant="solid" mr="2">
+                                {data.status}
+                            </Tag>
+                            <Tag title="Votes">{data.vote_count} 👍</Tag>
+                        </Box>
+                        <Box>
+                            <Tag colorScheme="purple" variant="solid">
+                                {data.original_language.toUpperCase()}
+                            </Tag>
+                        </Box>
+                    </HStack>
+                </Stack>
             </Stack>
         </Stack>
     )
 }
 
-export default function Movie() {
+export default function Serie() {
     return (
         <Layout>
             <Container h="full">
