@@ -9,9 +9,11 @@ import {
     Stack,
     Tag,
     Text,
+    VStack,
 } from '@chakra-ui/react'
 import HistoryButton from 'components/HistoryButton'
 import Layout from 'components/Layout'
+import WatchlistButton from 'components/WatchlistButton'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -46,9 +48,10 @@ const MovieContent = () => {
                 <title>{data.title}</title>
             </Head>
             <Box minW="300px" pos="relative">
-                <HStack pos="absolute" zIndex={1} top={2} right={2}>
+                <VStack pos="absolute" zIndex={1} top={2} right={2}>
                     <HistoryButton />
-                </HStack>
+                    <WatchlistButton />
+                </VStack>
                 <Image
                     src={buildImageUrl(data.poster_path, 'w300')}
                     alt="Movie poster"
@@ -95,7 +98,7 @@ const MovieContent = () => {
                         </Box>
                         <Box>
                             <Tag colorScheme="purple" variant="solid">
-                                {data.original_language}
+                                {data.original_language.toUpperCase()}
                             </Tag>
                         </Box>
                     </HStack>

@@ -82,7 +82,6 @@ function SearchResults() {
 
     return (
         <>
-            <Text>Related Movies &apos;{terms}&apos;</Text>
             <SimpleGrid
                 spacing={3}
                 templateColumns="repeat(auto-fill, minmax(250px, 1fr))"

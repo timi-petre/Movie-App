@@ -20,7 +20,6 @@ function PopularMovie() {
     if (!movies) {
         return <Progress size="xs" isIndeterminate />
     }
-
     return (
         <SimpleGrid
             spacing={8}
@@ -68,54 +67,6 @@ function PopularMovie() {
     )
 }
 
-function PopularSerie() {
-    const popular = useSWR('/api/series/popular')
-    const series = popular.data?.results
-    if (!series) {
-        return <Progress size="xs" isIndeterminate />
-    }
-
-    return (
-        <SimpleGrid spacing={8} columns={5} mt="5">
-            {series?.map((serie) => (
-                <Card maxW="sm" key={serie.id}>
-                    <CardBody alignContent="space-between" textAlign="center">
-                        {' '}
-                        <Link
-                            href={`/series/${serie.id}`}
-                            passHref
-                            legacyBehavior
-                        >
-                            <Image
-                                src={buildImageUrl(
-                                    serie.poster_path === null
-                                        ? '/iYBfBk1i9zjN9Vybbj8UgTYzkyv.jpg'
-                                        : serie.poster_path,
-                                    'w300',
-                                )}
-                                alt="Serie poster"
-                                layout="responsive"
-                                width="100"
-                                height="395"
-                                objectFit="contain"
-                                borderRadius="lg"
-                                unoptimized="true"
-                                style={{ cursor: 'pointer' }}
-                            />
-                        </Link>
-                        <Box mt="5">
-                            <Tag colorScheme="purple" variant="solid" mr="2">
-                                {serie.name}
-                            </Tag>
-                            <Tag>{serie.vote_average}</Tag>
-                        </Box>
-                    </CardBody>
-                </Card>
-            ))}
-        </SimpleGrid>
-    )
-}
-
 export default function Home({ series }) {
     return (
         <Layout title="Moviebase">
@@ -124,13 +75,6 @@ export default function Home({ series }) {
                     Movies
                 </Heading>
                 <PopularMovie />
-            </Container>
-
-            <Container mt="5" mb="10">
-                <Heading as="h4" size="md">
-                    TV Series
-                </Heading>
-                <PopularSerie />
             </Container>
         </Layout>
     )
