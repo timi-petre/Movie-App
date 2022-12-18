@@ -1,4 +1,5 @@
 import History from 'models/History'
+import Watchlist from 'models/Watchlist'
 import { fetcher } from 'utils/api'
 import dbConnect from 'utils/dbConnect'
 
@@ -21,6 +22,11 @@ export default async function handler(req, res) {
         }
     } else if (method === 'PUT') {
         const movie = await fetcher(getMovieUrl(id))
+
+        const watchlist = await Watchlist.findOne({ id })
+        if (watchlist) {
+            await Watchlist.deleteOne({ id })
+        }
 
         const history = new History({ id, title: movie.title })
         await history.save()

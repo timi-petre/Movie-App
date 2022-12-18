@@ -13,6 +13,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import useSWR from 'swr'
 import { buildImageUrl } from 'utils/api'
+import HistoryMovie from './history/history'
+import Recommended from './more/recommended'
+import WatchlistMovie from './watchlist/watchlist'
 
 function PopularMovie() {
     const popular = useSWR('/api/movies/popular')
@@ -70,11 +73,29 @@ function PopularMovie() {
 export default function Home({ series }) {
     return (
         <Layout title="Moviebase">
-            <Container>
+            <Container mb="5">
                 <Heading as="h4" size="md">
                     Movies
                 </Heading>
                 <PopularMovie />
+            </Container>
+            <Container mb="5">
+                <Heading as="h4" size="md">
+                    History
+                </Heading>
+                <HistoryMovie />
+            </Container>
+            <Container mb="5">
+                <Heading as="h4" size="md">
+                    Watchlist
+                </Heading>
+                <WatchlistMovie />
+            </Container>
+            <Container mb="10">
+                <Heading as="h4" size="md">
+                    Recommended
+                </Heading>
+                <Recommended />
             </Container>
         </Layout>
     )
