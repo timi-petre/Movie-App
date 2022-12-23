@@ -1,27 +1,24 @@
-import { Card, Center, Heading, SimpleGrid, Text } from '@chakra-ui/react'
-import Image from 'next/image'
-import Link from 'next/link'
-import useSWR from 'swr'
-import { buildImageUrl } from 'utils/api'
+import { Card, Center, Progress, SimpleGrid, Text } from '@chakra-ui/react';
+import Image from 'next/image';
+import Link from 'next/link';
+import useSWR from 'swr';
+import { buildImageUrl } from 'utils/api';
 
-const Recommended = ({ id }) => {
-    const { data, error } = useSWR(id && `/api/more/moreto`)
+const Recommended = () => {
+    const { data, error } = useSWR(`/api/more/{id}`);
     if (error) {
-        return <Center h="full">An error has occured</Center>
+        return <Center h="full">An error has occured</Center>;
+    }
+    if (!data) {
+        return <Progress size="xs" isIndeterminate />;
     }
 
-    // if (!data) {
-    //     return <Progress size="xs" isIndeterminate />
-    // }
-    if (!data?.results.length) {
-        return <Text>No results</Text>
-    }
     return (
         <>
             {' '}
             <SimpleGrid spacing={8} columns={5} mt="5">
-                {data.results?.length > 0 ? (
-                    data.results.map((movie) => (
+                {data?.length > 0 ? (
+                    data?.map((movie) => (
                         <Card
                             direction={{
                                 base: 'column',
@@ -46,11 +43,11 @@ const Recommended = ({ id }) => {
                         </Card>
                     ))
                 ) : (
-                    <Heading>Nothing...</Heading>
+                    <Text>Please check What to watch! page!</Text>
                 )}
             </SimpleGrid>
         </>
-    )
-}
+    );
+};
 
-export default Recommended
+export default Recommended;

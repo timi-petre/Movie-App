@@ -2,26 +2,27 @@ import {
     Box,
     Card,
     CardBody,
+    Center,
     Container,
     Heading,
     Progress,
     SimpleGrid,
     Tag,
-} from '@chakra-ui/react'
-import Layout from 'components/Layout'
-import Image from 'next/image'
-import Link from 'next/link'
-import useSWR from 'swr'
-import { buildImageUrl } from 'utils/api'
-import HistoryMovie from './history/history'
-import Recommended from './more/recommended'
-import WatchlistMovie from './watchlist/watchlist'
+} from '@chakra-ui/react';
+import Layout from 'components/Layout';
+import Image from 'next/image';
+import Link from 'next/link';
+import useSWR from 'swr';
+import { buildImageUrl } from 'utils/api';
+import HistoryMovie from './history/history';
+import Recommended from './more/recommended';
+import WatchlistMovie from './watchlist/watchlist';
 
 function PopularMovie() {
-    const popular = useSWR('/api/movies/popular')
-    const movies = popular.data?.results
+    const popular = useSWR('/api/movies/popular');
+    const movies = popular.data?.results;
     if (!movies) {
-        return <Progress size="xs" isIndeterminate />
+        return <Progress size="xs" isIndeterminate />;
     }
     return (
         <SimpleGrid
@@ -67,36 +68,83 @@ function PopularMovie() {
                 </Card>
             ))}
         </SimpleGrid>
-    )
+    );
 }
 
-export default function Home({ series }) {
+export default function Home() {
     return (
         <Layout title="Moviebase">
-            <Container mb="5">
-                <Heading as="h4" size="md">
-                    Movies
-                </Heading>
-                <PopularMovie />
-            </Container>
-            <Container mb="5">
-                <Heading as="h4" size="md">
-                    History
-                </Heading>
-                <HistoryMovie />
-            </Container>
-            <Container mb="5">
-                <Heading as="h4" size="md">
-                    Watchlist
-                </Heading>
-                <WatchlistMovie />
-            </Container>
-            <Container mb="10">
-                <Heading as="h4" size="md">
-                    Recommended
-                </Heading>
-                <Recommended />
-            </Container>
+            <Center>
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    overflow="hidden"
+                    variant="outline"
+                    w="max-content"
+                    border="2px"
+                    textAlign="center"
+                >
+                    <Container mb="5">
+                        <Heading as="h4" size="md" my="5">
+                            Movies
+                        </Heading>
+                        <PopularMovie />
+                    </Container>
+                </Card>
+            </Center>
+            <Center>
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    overflow="hidden"
+                    variant="outline"
+                    w="max-content"
+                    border="2px"
+                    textAlign="center"
+                    my="5"
+                >
+                    <Container mb="5">
+                        <Heading as="h4" size="md" my="5">
+                            History
+                        </Heading>
+                        <HistoryMovie />
+                    </Container>
+                </Card>
+            </Center>
+            <Center>
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    overflow="hidden"
+                    variant="outline"
+                    w="max-content"
+                    border="2px"
+                    textAlign="center"
+                    my="5"
+                >
+                    <Container mb="5">
+                        <Heading as="h4" size="md" my="5">
+                            Watchlist
+                        </Heading>
+                        <WatchlistMovie />
+                    </Container>
+                </Card>
+            </Center>
+            <Center>
+                <Card
+                    direction={{ base: 'column', sm: 'row' }}
+                    overflow="hidden"
+                    variant="outline"
+                    w="max-content"
+                    border="2px"
+                    textAlign="center"
+                    my="5"
+                >
+                    <Container mb="10">
+                        <Heading as="h4" size="md" my="5">
+                            Recommended
+                        </Heading>
+                        <Recommended />
+                    </Container>
+                </Card>
+            </Center>
         </Layout>
-    )
+    );
 }

@@ -1,5 +1,5 @@
-import Layout from 'components/Layout'
-import useSWR from 'swr'
+import Layout from 'components/Layout';
+import useSWR from 'swr';
 
 import {
     Badge,
@@ -13,14 +13,14 @@ import {
     Stack,
     Text,
     Wrap,
-} from '@chakra-ui/react'
-import HistoryButton from 'components/HistoryButton'
-import WatchlistButton from 'components/WatchlistButton'
-import { buildImageUrl } from 'utils/api'
+} from '@chakra-ui/react';
+import HistoryButton from 'components/HistoryButton';
+import WatchlistButton from 'components/WatchlistButton';
+import { buildImageUrl } from 'utils/api';
 export const MoviesContent = () => {
-    const { data, error } = useSWR(`/api/watchlist/watchlist`)
+    const { data, error } = useSWR(`/api/watchlist/watchlist`);
     if (error) {
-        return <Center h="full">An error has occured</Center>
+        return <Center h="full">An error has occured</Center>;
     }
 
     if (!data) {
@@ -28,7 +28,7 @@ export const MoviesContent = () => {
             <Center h="full">
                 <CircularProgress isIndeterminate />
             </Center>
-        )
+        );
     }
     return (
         <>
@@ -51,7 +51,7 @@ export const MoviesContent = () => {
                                 maxH="225"
                             />
                         </Link>
-                        <CardBody w={[300, 400, 500]}>
+                        <CardBody>
                             <Heading size="md">{movie.title}</Heading>
                             <Text py="2">{movie.release_date}</Text>
                             <Stack direction="row" flexWrap="wrap" mb="5">
@@ -76,8 +76,8 @@ export const MoviesContent = () => {
                 <div>{data.data}</div>
             )}
         </>
-    )
-}
+    );
+};
 export default function Watchlist() {
     return (
         <Layout title="Watchlist">
@@ -85,5 +85,5 @@ export default function Watchlist() {
                 <MoviesContent />
             </Wrap>
         </Layout>
-    )
+    );
 }

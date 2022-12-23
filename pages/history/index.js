@@ -1,13 +1,13 @@
-import { Card, Center, CircularProgress, Wrap } from '@chakra-ui/react'
-import Movie from 'components/HistoryLayout'
-import Layout from 'components/Layout'
-import useSWR from 'swr'
+import { Center, CircularProgress, Wrap } from '@chakra-ui/react';
+import Movie from 'components/HistoryLayout';
+import Layout from 'components/Layout';
+import useSWR from 'swr';
 
 export const HistoryContent = () => {
-    const { data, error } = useSWR(`/api/history/histories`)
+    const { data, error } = useSWR(`/api/history/histories`);
 
     if (error) {
-        return <Center h="full">An error occured</Center>
+        return <Center h="full">An error occured</Center>;
     }
 
     if (!data) {
@@ -15,25 +15,24 @@ export const HistoryContent = () => {
             <Center h="full">
                 <CircularProgress isIndeterminate />
             </Center>
-        )
+        );
     }
 
     return (
         <>
-            <Card
-                direction={{ base: 'column', sm: 'row' }}
-                overflow="hidden"
-                variant="outline"
-            >
-                {data.length > 0 ? (
-                    data.map(({ data }) => <Movie key={data.id} data={data} />)
-                ) : (
-                    <div>Your history is empty</div>
-                )}
-            </Card>
+            {data.length > 0 ? (
+                data.map(({ data, date }) => (
+                    <>
+                        {' '}
+                        <Movie key={data.id} data={data} date={date} />
+                    </>
+                ))
+            ) : (
+                <div>Your history is empty</div>
+            )}
         </>
-    )
-}
+    );
+};
 export default function History() {
     return (
         <Layout title="History">
@@ -41,5 +40,5 @@ export default function History() {
                 <HistoryContent />
             </Wrap>
         </Layout>
-    )
+    );
 }
