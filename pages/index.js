@@ -15,7 +15,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { buildImageUrl } from 'utils/api';
 import HistoryMovie from './history/history';
-import Recommended from './more/recommended';
+import TopRatedMovie from './more/top_rated';
 import WatchlistMovie from './watchlist/watchlist';
 
 function PopularMovie() {
@@ -139,9 +139,9 @@ export default function Home() {
                 >
                     <Container mb="10">
                         <Heading as="h4" size="md" my="5">
-                            Recommended
+                            Top Rated
                         </Heading>
-                        <Recommended />
+                        <TopRatedMovie />
                     </Container>
                 </Card>
             </Center>
